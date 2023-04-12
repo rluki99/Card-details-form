@@ -1,144 +1,158 @@
-const dayInput = document.querySelector('#day')
-const monthInput = document.querySelector('#month')
-const yearInput = document.querySelector('#year')
-const subBtn = document.querySelector('.submit')
-const inputs = document.querySelectorAll('input')
+const nameInput = document.querySelector('#name')
+const numberInput = document.querySelector('#card-number')
+const mmInput = document.querySelector('#mm-date')
+const yyInput = document.querySelector('#yy-date')
+const cvcInput = document.querySelector('#cvc')
+const subBtn = document.querySelector('#submit')
+const form = document.querySelector('.form')
+const complete = document.querySelector('.complete')
 
-const daysSpan = document.querySelector('#days')
-const monthsSpan = document.querySelector('#months')
-const yearsSpan = document.querySelector('#years')
+const cvcCard = document.querySelector('.card__cvc')
+const nameCard = document.querySelector('.card__name')
+const numberCard = document.querySelector('.card__number')
+const expCard = document.querySelector('.card__exp')
 
-//our months can have 30/31/29/28 days
-const dateDiff = (date1, date2) => {
-    const years = date2.getFullYear() - date1.getFullYear();
-    const months = date2.getMonth() - date1.getMonth();
-    const days = date2.getDate() - date1.getDate();
+const complBtn = document.querySelector('#continue')
 
-    const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+const nameWrite = () => {
+	nameCard.textContent = nameInput.value
+	if (nameInput.value === '') {
+		nameCard.textContent = 'jane appleseed'
+	}
+}
 
-    let adjustedMonths = years * 12 + months;
-    let adjustedDays = days;
+const formatCardNumber = (number) => {
+	return number
+		.replace(/\W/gi, '')
+		.replace(/(.{4})/g, '$1 ')
+		.trim()
+}
 
-    if (days < 0) {
-        adjustedMonths--;
-        const prevMonth = (date2.getMonth() - 1 + 12) % 12;
-        const prevMonthYear = date2.getFullYear() - (prevMonth === 11 ? 1 : 0);
-        adjustedDays += daysInMonth(prevMonthYear, prevMonth);
+const numberWrite = () => {
+	const formattedNumber = formatCardNumber(numberInput.value)
+	numberCard.textContent = formattedNumber || '0000 0000 0000 0000'
+}
+
+const expWrite = () => {
+	expCard.textContent = mmInput.value + '/' + yyInput.value
+	if (mmInput.value === '' && yyInput.value === '') {
+		expCard.textContent = '00/00'
+	} else if (mmInput.value === '') {
+		expCard.textContent = `00/${yyInput.value}`
+	} else if (yyInput.value === '') {
+		expCard.textContent = `${mmInput.value}/00`
+	}
+}
+
+const cvcWrite = () => {
+	cvcCard.textContent = cvcInput.value
+	if (cvcInput.value === '') {
+		cvcCard.textContent = '000'
+	}
+}
+
+const isNameValid = () => {
+	const trimmedName = nameInput.value.trim()
+
+	if (trimmedName === '') {
+		nameInput.nextElementSibling.textContent = `Can't be blank`
+		return false
+	}
+
+	if (/\d/.test(trimmedName) || !/^[a-ząćęłńóśźż\s]+$/i.test(trimmedName)) {
+		nameInput.nextElementSibling.textContent = `Wrong format, letters only`
+		return false
+	}
+
+	nameInput.nextElementSibling.textContent = ''
+	return true
+}
+
+const isNumberValid = () => {
+	const trimmedNumber = numberInput.value.replace(/\s/g, '')
+
+	if (trimmedNumber === '') {
+		numberInput.nextElementSibling.textContent = `Can't be blank`
+		return false
+	}
+
+	if (!/^\d+$/.test(trimmedNumber)) {
+		numberInput.nextElementSibling.textContent = `Wrong format, nubers only`
+		return false
+	}
+
+	if (!/^\d{16}$/.test(trimmedNumber)) {
+		numberInput.nextElementSibling.textContent = `Must have 16 digits`
+		return false
+	}
+
+	numberInput.nextElementSibling.textContent = ''
+	return true
+}
+
+const isCvcValid = () => {
+	const trimmedCvc = cvcInput.value.replace(/\s/g, '')
+
+	if (trimmedCvc === '') {
+		cvcInput.nextElementSibling.textContent = `Can't be blank`
+		return false
+	}
+
+	if (!/^\d+$/.test(trimmedCvc)) {
+		cvcInput.nextElementSibling.textContent = `Wrong format, nubers only`
+		return false
+	}
+
+	if (!/^\d{3}$/.test(trimmedCvc)) {
+		cvcInput.nextElementSibling.textContent = `Must have 3 digits`
+		return false
+	}
+
+	cvcInput.nextElementSibling.textContent = ''
+	return true
+}
+
+const isExpValid = () => {
+	const trimmedMm = mmInput.value.replace(/\s/g, '')
+	const trimmedYy = yyInput.value.replace(/\s/g, '')
+
+	if (trimmedMm === '' || trimmedYy === '') {
+		mmInput.closest('.form__box-exp').querySelector('.error').textContent = `Can't be blank`
+		return false
+	}
+
+    if (!/^\d+$/.test(trimmedMm) || !/^\d+$/.test(trimmedYy)) {
+		mmInput.closest('.form__box-exp').querySelector('.error').textContent = `Wrong format, nubers only`
+		return false
+	}
+
+	if (!/^\d{2}$/.test(trimmedMm) || !/^\d{2}$/.test(trimmedYy)) {
+		mmInput.closest('.form__box-exp').querySelector('.error').textContent = `Must have 3 digits`
+		return false
+	}
+
+    mmInput.closest('.form__box-exp').querySelector('.error').textContent = ''
+    return true
+}
+
+nameInput.addEventListener('keyup', nameWrite)
+numberInput.addEventListener('keyup', numberWrite)
+mmInput.addEventListener('keyup', expWrite)
+yyInput.addEventListener('keyup', expWrite)
+cvcInput.addEventListener('keyup', cvcWrite)
+subBtn.addEventListener('click', (e) => {
+	e.preventDefault()
+    if (
+        isNameValid() &
+        isNumberValid() &
+        isCvcValid() & 
+        isExpValid() 
+    )  {
+        form.style.display = 'none'
+        complete.style.display = 'flex'
     }
+})
 
-    if (adjustedDays === daysInMonth(date2.getFullYear(), date2.getMonth() - 1)) {
-        adjustedDays = 0;
-        adjustedMonths++;
-    }
-
-    const adjustedYears = Math.floor(adjustedMonths / 12);
-    adjustedMonths %= 12;
-
-    return { years: adjustedYears, months: adjustedMonths, days: adjustedDays };
-};
-
-
-const getCurrentAndInputDate = (dayInput, monthInput, yearInput) => {
-	const currentDate = new Date();
-	const inputDate = new Date(
-		parseInt(yearInput.value, 10),
-		//months are indexed from 0 to 11
-		parseInt(monthInput.value, 10) - 1,
-		parseInt(dayInput.value, 10)
-	  );
-	  return { currentDate, inputDate };
-}
-
-const countDate = () => {
-	const isDayValid = validateInput(dayInput, dayInput, monthInput, yearInput)
-	const isMonthValid = validateInput(monthInput, dayInput, monthInput, yearInput)
-	const isYearValid = validateInput(yearInput, dayInput, monthInput, yearInput)
-
-	if (!isDayValid || !isMonthValid || !isYearValid) {
-		return
-	}
-
-	const { currentDate, inputDate } = getCurrentAndInputDate(dayInput, monthInput, yearInput);
-	const diff = dateDiff(inputDate, currentDate)
-
-	daysSpan.textContent = diff.days
-	monthsSpan.textContent = diff.months
-	yearsSpan.textContent = diff.years
-}
-
-const validateInput = (input, dayInput, monthInput, yearInput) => {
-	const errorElement = input.nextElementSibling
-	const labelElement = input.previousElementSibling
-	const minValue = parseInt(input.getAttribute('min'), 10)
-	const maxValue = parseInt(input.getAttribute('max'), 10)
-	const { currentDate, inputDate } = getCurrentAndInputDate(dayInput, monthInput, yearInput);
-
-	clearErrors(labelElement, input, errorElement)
-
-	if (input.value === '') {
-		addErrors(labelElement, input)
-		errorElement.textContent = `This field is required`
-		return false
-	} else if (
-		input.id === 'year' &&
-		(parseInt(input.value, 10) > currentDate.getFullYear() ||
-			(parseInt(input.value, 10) === currentDate.getFullYear() &&
-				(parseInt(monthInput.value, 10) > currentDate.getMonth() + 1 ||
-					(parseInt(monthInput.value, 10) === currentDate.getMonth() + 1 &&
-						parseInt(dayInput.value, 10) > currentDate.getDate()))))
-	) {
-		addErrors(labelElement, input)
-		errorElement.textContent = `Must be in the past`
-		return false
-	} else if (
-		(minValue !== null && parseInt(input.value, 10) < minValue) ||
-		(maxValue !== null && parseInt(input.value, 10) > maxValue)
-	) {
-		addErrors(labelElement, input)
-		errorElement.textContent = `Must be a valid ${input.id}`
-		return false
-	} else if (
-		inputDate.getFullYear() !== parseInt(yearInput.value, 10) ||
-		inputDate.getMonth() !== parseInt(monthInput.value, 10) - 1 ||
-		inputDate.getDate() !== parseInt(dayInput.value, 10)
-	) {
-		addErrorToAllInputs([dayInput, monthInput, yearInput], `Must be a valid date`)
-		return false
-	} else {
-		clearErrors(labelElement, input, errorElement)
-		return true
-	}
-}
-
-
-const clearErrors = (label, input, errorMsg) => {
-	label.classList.remove('error')
-	input.classList.remove('error')
-	errorMsg.textContent = ''
-}
-
-const addErrors = (label, input) => {
-	label.classList.add('error')
-	input.classList.add('error')
-}
-
-const addErrorToAllInputs = (inputs, errorMsg) => {
-	inputs.forEach((input) => {
-		const labelElement = input.previousElementSibling
-		const errorElement = input.nextElementSibling
-		labelElement.classList.add('error')
-		input.classList.add('error')
-		if (input.id === 'day') {
-			errorElement.textContent = errorMsg
-		}
-	})
-}
-
-const enterCheck = (e) => {
-	if (e.key === 'Enter') {
-		countDate()
-	}
-}
-
-subBtn.addEventListener('click', countDate)
-inputs.forEach((input) => input.addEventListener('keyup', enterCheck))
+complBtn.addEventListener('click', () => {
+    location.reload();
+})
