@@ -1,0 +1,296 @@
+@use './colors' as *;
+
+@mixin mobile {
+	@media (min-width: 576px) {
+		@content;
+	}
+}
+
+@mixin desktop {
+	@media (min-width: 992px) {
+		@content;
+	}
+}
+
+@mixin desktopMax {
+	@media (min-width: 1200px) {
+		@content;
+	}
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-size: 18px;
+	font-family: 'Space Grotesk', sans-serif;
+	font-weight: 500;
+	min-height: 100vh;
+	min-height: 100svh;
+	display: flex;
+	flex-direction: column;
+}
+
+main {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+
+	@include desktop {
+		flex-direction: row;
+	}
+}
+
+.card {
+	background-image: url(../../images/bg-main-mobile.png);
+	background-position: center;
+	background-size: cover;
+	position: relative;
+	width: 100%;
+	height: 250px;
+	color: $color-white;
+	font-size: 12px;
+	text-transform: uppercase;
+
+	@include desktop {
+		width: 300px;
+		height: 100vh;
+		background-image: url(../../images/bg-main-mobile.png);
+	}
+
+	@include desktopMax {
+		width: 500px;
+	}
+
+	&__back,
+	&__front {
+		display: inline-block;
+		position: absolute;
+
+		.shape {
+			display: block;
+			width: 290px;
+
+			@include desktopMax {
+				width: 350px;
+			}
+		}
+	}
+
+	&__back {
+		top: 40px;
+		right: 15px;
+		box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+
+		@include desktop {
+			top: 51%;
+			right: -80px;
+		}
+
+		@include desktopMax {
+			right: -160px;
+		}
+	}
+
+	&__front {
+		bottom: -38px;
+		left: 15px;
+
+		@include desktop() {
+			bottom: 52%;
+			left: 140px;
+		}
+
+		@include desktopMax {
+			left: 280px;
+		}
+	}
+
+	&__cvc,
+	&__name,
+	&__number,
+	&__exp,
+	&__logo {
+		position: absolute;
+	}
+
+	&__cvc {
+		top: 72px;
+		right: 35px;
+
+		@include desktop() {
+			top: 86px;
+			right: 45px;
+		}
+	}
+
+	&__name {
+		bottom: 18px;
+		left: 25px;
+	}
+
+	&__number {
+		bottom: 50px;
+		left: 25px;
+		font-size: 18px;
+		letter-spacing: 2px;
+	}
+
+	&__exp {
+		bottom: 18px;
+		right: 25px;
+	}
+
+	&__logo {
+		top: 15px;
+		left: 25px;
+		width: 65px;
+	}
+}
+
+.wrapper {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+	padding: 0 30px;
+}
+
+.form {
+	width: 100%;
+
+	@include mobile {
+		max-width: 600px;
+	}
+
+	@include desktop {
+		width: 370px;
+	}
+
+	&__box {
+		display: flex;
+		flex-direction: column;
+
+		.label {
+			text-transform: uppercase;
+			margin: 20px 0 10px;
+			display: block;
+			font-size: 13px;
+			letter-spacing: 1px;
+			color: $color-very-dark-violet;
+		}
+
+		.input {
+			color: $color-dark-grayish-violet;
+			padding: 10px;
+			border: 1px solid $color-light-grayish-violet;
+			border-radius: 6px;
+			width: 100%;
+			display: block;
+			font-size: 18px;
+		}
+
+		.input:focus, .input:active {
+			border: 1px solid $color-dark-grayish-violet;
+			outline: none;
+		}
+
+		// .input::placeholder {
+
+		// }
+	}
+	&__box:last-of-type {
+		flex-direction: row;
+		gap: 15px;
+	}
+
+	&__box-exp {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+
+		.label {
+			width: 100%;
+		}
+
+		.inputs {
+			gap: 10px;
+			display: flex;
+			flex-direction: row;
+		}
+	}
+
+	&__box-cvc {
+		flex-direction: column;
+		flex: 1;
+	}
+
+	.error {
+		color: $color-red;
+	}
+}
+
+.button {
+	margin-top: 35px;
+	display: block;
+	width: 100%;
+	height: 50px;
+	font-size: 20px;
+	color: $color-light-grayish-violet;
+	border: none;
+	cursor: pointer;
+	border-radius: 6px;
+	background-color: $color-very-dark-violet;
+	transition: background-color 0.3s;
+}
+
+.button:hover {
+	background-color: $color-atribution;
+}
+
+.complete {
+	width: 100%;
+	height: 100%;
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	&__thank {
+		text-transform: uppercase;
+		letter-spacing: 2px;
+		font-size: 36px;
+		margin: 25px 0 15px;
+	}
+
+	&__text {
+		color: $color-dark-grayish-violet;
+		margin-bottom: 25px;
+	}
+
+	@include mobile {
+		max-width: 600px;
+	}
+
+	@include desktop {
+		width: 370px;
+	}
+}
+
+.sign {
+	margin-top: 10px;
+	.attribution {
+		font-size: 11px;
+		text-align: center;
+	}
+
+	.attribution a {
+		color: $color-atribution;
+	}
+}
