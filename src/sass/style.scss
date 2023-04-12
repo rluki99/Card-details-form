@@ -61,7 +61,7 @@ main {
 			width: 290px;
 
 			@include desktopMax {
-				width: 350px;
+				width: 400px;
 			}
 		}
 	}
@@ -84,6 +84,7 @@ main {
 	&__front {
 		bottom: -38px;
 		left: 15px;
+		box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
 
 		@include desktop() {
 			bottom: 52%;
@@ -91,7 +92,7 @@ main {
 		}
 
 		@include desktopMax {
-			left: 280px;
+			left: 180px;
 		}
 	}
 
@@ -101,15 +102,23 @@ main {
 	&__exp,
 	&__logo {
 		position: absolute;
+
+		@include desktopMax {
+			font-size: 14px;
+		}
 	}
 
 	&__cvc {
-		top: 72px;
+		top: 71px;
 		right: 35px;
 
-		@include desktop() {
-			top: 86px;
-			right: 45px;
+		@include desktop {
+			right: 40px;
+		}
+
+		@include desktopMax {
+			top: 98px;
+			right: 55px;
 		}
 	}
 
@@ -123,6 +132,11 @@ main {
 		left: 25px;
 		font-size: 18px;
 		letter-spacing: 2px;
+
+		@include desktopMax {
+			font-size: 24px;
+			bottom: 60px;
+		}
 	}
 
 	&__exp {
@@ -134,6 +148,12 @@ main {
 		top: 15px;
 		left: 25px;
 		width: 65px;
+
+		@include desktopMax {
+			top: 20px;
+			left: 30px;
+			width: 75px;
+		}
 	}
 }
 
